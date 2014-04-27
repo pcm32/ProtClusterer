@@ -6,7 +6,7 @@ ProtDomClusterer <- setClass("ProtDomClusterer",
                           slots= c(
                             davidEmail = "character"
                             ),
-			  contains="GeneralClusterer"
+			  contains="PresenceAbsenceClusterer"
                           )
 
 setMethod("retrieveFeatures",signature(object="ProtDomClusterer"), function(object) {
