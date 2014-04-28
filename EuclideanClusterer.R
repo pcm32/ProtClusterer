@@ -12,7 +12,7 @@ setMethod("plotHeatMap",signature(object="EuclideanClusterer"),
             heatmap.2(as.matrix(object@uniqueFeaturesTable),
                       Rowv=object@colorProtDend,
                       Colv=as.dendrogram(object@clustFeatures),
-                      #col=colorpanel(2,"white","red"),breaks=3,
+                      col=colorpanel(99,"lightgrey",mid="purple",high="blue"),breaks=100,
                       trace="none",key=FALSE,labRow=protLab,labCol=featLab)->hm
             return(hm)
           })
