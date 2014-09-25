@@ -1,0 +1,8 @@
+Package: ProtClusterer
+Title: Feature/Annotation based Protein Clusterer
+Version: 0.1
+Date: 2014-09-25
+Author: Pablo Moreno
+Maintainer: Pablo Moreno
+Description: A package to clusterize proteins according to data/annotation extracted from the way, on an iterative manner.
+License: GPL-2
