@@ -2,24 +2,30 @@ library(UniProt.ws)
 library(data.table)
 library(RCurl)
 
+# the taxonomy needs to be set for Uniprot.ws (default to human)
 ProtExpAtlasBaseClusterer <- setClass("ProtExpAtlasBaseClusterer", 
                           slots= c(
                             experimentID = "character",
-                            typeOfExp = "character"
+                            typeOfExp = "character",
+                            taxonId = "numeric",
+                            multiOrgExp = "logical"
                             ),
-			  contains="EuclideanClusterer"
+                          prototype = prototype(taxonId = 9606, multiOrgExp = F),
+			                    contains="EuclideanClusterer"
                           )
 
 asNumeric <- function(x) as.numeric(x)
 factorsNumeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.character)],   
                                                    asNumeric))
 
+taxId2Label<-data.frame(taxId=c(9606,10090),label=c("Homo sapiens","Mus musculus"))
 
 setMethod("retrieveFeatures",signature(object="ProtExpAtlasBaseClusterer"), function(object) {
   # We need first to translate proteins into genes for gene expression atlas
   keysProts<-object@proteins
   ktype<-"UNIPROTKB"
   columns<-c("ENSEMBL")
+  taxId(UniProt.ws)<-object@taxonId
   res.dt <- data.table(select(UniProt.ws, keysProts, columns, ktype),key=c("ENSEMBL"))
   # Now we retrieve the data for the experiment, this depends on the type
   # of experiment: "baseline results" (where a matrix is downloaded
@@ -27,8 +33,15 @@ setMethod("retrieveFeatures",signature(object="ProtExpAtlasBaseClusterer"), func
   # "differential expression results" 
   # and "data used for differential expression results"
   urlPrefix<-"https://www.ebi.ac.uk/gxa/experiments/"
-  url<-paste(urlPrefix,experimentID,".tsv",sep="")
-  d<-getURL(url)
+  urlSuffix<-""
+  if(object@multiOrgExp)
+    urlSuffix<-paste("?serializedFilterFactors=ORGANISM:",taxId2Label$label[taxId2Label$taxId==object@taxonId],sep="")
+  # some data sets might require additional information, otherwise they are obtained
+  # by default for human:
+  # http://www.ebi.ac.uk/gxa/experiments/E-GEOD-30352.tsv?serializedFilterFactors=ORGANISM:Mus%20musculus
+  # http://www.ebi.ac.uk/gxa/experiments/E-MTAB-599.tsv?serializedFilterFactors=ORGANISM:Mus%20musculus
+  url<-paste(urlPrefix,object@experimentID,".tsv",urlSuffix,sep="")
+  d<-getURL(URLencode(url))
   expData<-read.table(text=d,comment.char="#",sep="\t",header=T)
   data.table(expData[,c(-2)],key=c("Gene.ID"))->expData.dt
   expData.dt[res.dt]->expreForProts
