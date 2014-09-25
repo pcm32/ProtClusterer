@@ -1,5 +1,7 @@
 #library(dynamicTreeCut)
 
+#'
+#' @include PresenceAbsenceClusterer.R
 ProtDomClusterer <- setClass("ProtDomClusterer", 
                           slots= c(
                             davidEmail = "character"

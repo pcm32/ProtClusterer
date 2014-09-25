@@ -1,5 +1,7 @@
 
 # the taxonomy needs to be set for Uniprot.ws (default to human)
+
+#' @include EuclideanClusterer
 ProtExpAtlasBaseClusterer <- setClass("ProtExpAtlasBaseClusterer", 
                           slots= c(
                             experimentID = "character",

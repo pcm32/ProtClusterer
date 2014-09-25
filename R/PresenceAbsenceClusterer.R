@@ -1,4 +1,4 @@
-
+#' @include GeneralClusterer.R
 PresenceAbsenceClusterer <- setClass("PresenceAbsenceClusterer", 
                              #slots= c(),
                              contains="GeneralClusterer"

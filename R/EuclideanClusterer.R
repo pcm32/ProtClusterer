@@ -1,3 +1,4 @@
+#' @include GeneralClusterer.R
 EuclideanClusterer <- setClass("EuclideanClusterer", 
                                      #slots= c(),
                                      contains="GeneralClusterer"
