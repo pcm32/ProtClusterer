@@ -1,5 +1,3 @@
-library(RDAVIDWebService)
-
 DAVIDEnrichmentAnalyser <- setClass("DAVIDEnrichmentAnalyser",
 				    slots= c(
 					     email = "character",

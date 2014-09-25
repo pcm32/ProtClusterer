@@ -1,4 +1,3 @@
-library(dendroextras)
 
 setOldClass("hclust")
 setOldClass("dendrogram")

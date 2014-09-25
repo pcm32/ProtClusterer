@@ -1,4 +1,3 @@
-library(gplots)
 
 PresenceAbsenceClusterer <- setClass("PresenceAbsenceClusterer", 
                              #slots= c(),

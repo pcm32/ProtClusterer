@@ -1,5 +1,3 @@
-library(gplots)
-
 EuclideanClusterer <- setClass("EuclideanClusterer", 
                                      #slots= c(),
                                      contains="GeneralClusterer"

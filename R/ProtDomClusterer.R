@@ -1,6 +1,4 @@
-library(biomaRt)
-library(dynamicTreeCut)
-library(ade4)
+#library(dynamicTreeCut)
 
 ProtDomClusterer <- setClass("ProtDomClusterer", 
                           slots= c(
