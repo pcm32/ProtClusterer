@@ -1,9 +1,13 @@
-
 setOldClass("hclust")
 setOldClass("dendrogram")
 setOldClass("dist")
 setOldClass("integer")
 
+#' An S4 class to represent the most generic type of cluster. This class is
+#' never initialized as such. It is equivalent to an abstract class.
+#' 
+#' @slot proteins A list of UniProt identifiers as a factor for the proteins to
+#'   be clustered.
 GeneralClusterer <- setClass("GeneralClusterer", 
                           slots= c(
                             proteins = "factor", 
@@ -24,12 +28,54 @@ GeneralClusterer <- setClass("GeneralClusterer",
                           )
 )
 
+#' Retrieve features
+#' 
+#' \code{retrieveFeatures} connects to the appropiate data source and fetches 
+#' whatever attributes are relevant for the clusterer (such as expression, 
+#' presence of certain annotations, localizations, etc.).
+#' 
+#' @param object An object which inherits from GeneralClusterer.
+#' @param ... parameters to be passed to the inheriting object for data 
+#'   retrieval.
+#'   
+#' @return a new object of the same type as the one provided with a matrix of 
+#'   proteins/features filled.
 setGeneric("retrieveFeatures",function(object,...) standardGeneric("retrieveFeatures"))
+
+#' Calculate distances
+#' 
+#' \code{calculateDistances} uses the data retrieved in
+#' \code{\link{retrieveFeatures}} to produces distances (according to the
+#' object, that could be euclidian, binary, etc.) both within the proteins and
+#' the features. It should be called after \code{retrieveFeatures}
+#' 
+#' @param object An object which inherits from GeneralClusterer.
+#' @param minFeaturesPres The minimum number that a protein needs to show up in
+#'   a feature to be considered for the distance calculations.
+#' @return a new object of the same type as the one provided with a matrix of 
+#'   proteins/features filled and distances calculated.
 setGeneric("calculateDistances",function(object,minFeaturePres=0,...) standardGeneric("calculateDistances"))
+
+#' Colour protein clusters
+#' 
+#' \code{colourProteinClusters} colours the protein clusters generated during 
+#' the distance calculation step, according to the number of clusters \code{k} 
+#' desired or the cut-off height \code{h} desired. Optionally group labels can 
+#' be ommited by issuing \code{groupLabels=F} (defaults to \code{TRUE}). This 
+#' method needs to be called after \code{\link{calculateDistances}}.
+#' 
+#' @param object An object which inherits from GeneralClusterer, for which data 
+#'   has been retrieved and distances calculated
+#' @param k The number of clusters (integer) to be enumerated.
+#' @param h The height to cut the dendrogram at to produce the clusters.
+#'   \code{k} overrides this.
+#' @param ... other parameters for each clusterer.
+setGeneric("colourProteinClusters",function(object,k,h,groupLabels=T,...) standardGeneric("colourProteinClusters"))
+
+
 setGeneric("getProteinsInClusters",function(object,clusterNumbers,...) standardGeneric("getProteinsInClusters"))
 setGeneric("redoWithClusters",function(object,clusterNumbers,...) standardGeneric("redoWithClusters"))
 setGeneric("plotHeatMap",function(object,displayProt=F,displayFeat=F,...) standardGeneric("plotHeatMap"))
-setGeneric("colourProteinClusters",function(object,k,h,groupLabels=T,...) standardGeneric("colourProteinClusters"))
 setGeneric("autoColourProteinClusters",function(object,...) standardGeneric("autoColourProteinClusters"))
 
 setMethod("getProteinsInClusters",signature(object="GeneralClusterer",clusterNumbers="vector"),function(object,clusterNumbers) {
