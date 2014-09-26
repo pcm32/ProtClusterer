@@ -17,10 +17,11 @@ Imports:
     RCurl,
     data.table
 Collate:
-    'DAVIDEnrichmentAnalyser.R'
     'GeneralClusterer.R'
+    'DAVIDEnrichmentAnalyser.R'
     'EuclideanClusterer.R'
     'PresenceAbsenceClusterer.R'
     'ProtDomClusterer.R'
-    'EuclideanClusterer'
     'ProtExpAtlasBaseClusterer.R'
+Depends:
+    methods

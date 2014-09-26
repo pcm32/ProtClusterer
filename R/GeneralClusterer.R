@@ -67,14 +67,49 @@ setGeneric("calculateDistances",function(object,minFeaturePres=0,...) standardGe
 #' @param object An object which inherits from GeneralClusterer, for which data 
 #'   has been retrieved and distances calculated
 #' @param k The number of clusters (integer) to be enumerated.
-#' @param h The height to cut the dendrogram at to produce the clusters.
+#' @param h The height to cut the dendrogram at to produce the clusters. 
 #'   \code{k} overrides this.
 #' @param ... other parameters for each clusterer.
+#' @return a new object of the same type as the one provided with a matrix of 
+#'   proteins/features filled, distances calculated and clusters colored.
 setGeneric("colourProteinClusters",function(object,k,h,groupLabels=T,...) standardGeneric("colourProteinClusters"))
 
-
+#' Get proteins in clusters
+#' 
+#' \code{getProteinsInClusters} returns the set of proteins present in the 
+#' clusters defined in the \code{clusterNumber} vector for the provided 
+#' GeneralClusterer \code{object}. The cluster numbers are read by the user from
+#' the figure produced by \code{colourProteinClusters}.
+#' 
+#' @param object An object which inherits from GeneralClusterer with a matrix of
+#'   proteins/features filled, distances calculated and clusters colored.
 setGeneric("getProteinsInClusters",function(object,clusterNumbers,...) standardGeneric("getProteinsInClusters"))
+
+#' Redo with Clusters
+#' 
+#' \code{redoWithClusters} runs the all the steps again for the proteins in the 
+#' defined clusters.
+#' 
+#' @param clusterNumbers The clusters for which the analysis should be redone.
+#'   
+#' @return a new object of the same type as the one provided with a matrix of 
+#'   proteins/features filled, distances calculated and clusters colored, but
+#'   based on the proteins available in the defined clusters of the object given
+#'   as parameter.
 setGeneric("redoWithClusters",function(object,clusterNumbers,...) standardGeneric("redoWithClusters"))
+
+#' Plot heatmap
+#' 
+#' \code{plotHeatMap} produces a heatmap of the proteins and features of the
+#' object provided. Protein identifiers and feature identifiers can be shown
+#' optionally.
+#' 
+#' @param object An object which inherits from GeneralClusterer with a matrix of
+#'   proteins/features filled, distances calculated and clusters colored.
+#' @param displayProt Sets whether the protein identifier should be shown in the
+#'   heatmap, defaults to \code{False}.
+#' @param displayFeat Sets whether the feature identifier should be shown in the
+#' heatmap, defaults to \code{False}.
 setGeneric("plotHeatMap",function(object,displayProt=F,displayFeat=F,...) standardGeneric("plotHeatMap"))
 setGeneric("autoColourProteinClusters",function(object,...) standardGeneric("autoColourProteinClusters"))
 

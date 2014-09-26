@@ -1,3 +1,6 @@
+#' @include GeneralClusterer.R
+NULL
+
 DAVIDEnrichmentAnalyser <- setClass("DAVIDEnrichmentAnalyser",
 				    slots= c(
 					     email = "character",
