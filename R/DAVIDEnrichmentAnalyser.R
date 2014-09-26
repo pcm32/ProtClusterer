@@ -1,4 +1,5 @@
-library(RDAVIDWebService)
+#' @include GeneralClusterer.R
+NULL
 
 DAVIDEnrichmentAnalyser <- setClass("DAVIDEnrichmentAnalyser",
 				    slots= c(

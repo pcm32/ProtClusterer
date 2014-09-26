@@ -1,7 +1,7 @@
-library(biomaRt)
-library(dynamicTreeCut)
-library(ade4)
-
+#' An S4 object that handles clustering of proteins based on the presence/absence of
+#' InterPro domains.
+#'
+#' @include PresenceAbsenceClusterer.R
 ProtDomClusterer <- setClass("ProtDomClusterer", 
                           slots= c(
                             davidEmail = "character"

@@ -1,0 +1,27 @@
+Package: ProtClusterer
+Title: Feature/Annotation based Protein Clusterer
+Version: 0.1
+Date: 2014-09-25
+Author: Pablo Moreno
+Maintainer: Pablo Moreno <pcm32@github.com>
+Description: A package to clusterize proteins according to data/annotation
+    extracted from the way, on an iterative manner.
+License: GPL-2
+Imports:
+    dendroextras,
+    gplots,
+    RDAVIDWebService,
+    ade4,
+    biomaRt,
+    UniProt.ws,
+    RCurl,
+    data.table
+Collate:
+    'GeneralClusterer.R'
+    'DAVIDEnrichmentAnalyser.R'
+    'EuclideanClusterer.R'
+    'PresenceAbsenceClusterer.R'
+    'ProtDomClusterer.R'
+    'ProtExpAtlasBaseClusterer.R'
+Depends:
+    methods
