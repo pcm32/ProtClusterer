@@ -6,10 +6,10 @@ ProtExpAtlasBaseClusterer <- setClass("ProtExpAtlasBaseClusterer",
                           slots= c(
                             experimentID = "character",
                             typeOfExp = "character",
-                            taxonId = "numeric",
+                            taxonID = "numeric",
                             multiOrgExp = "logical"
                             ),
-                          prototype = prototype(taxonId = 9606, multiOrgExp = F),
+                          prototype = prototype(taxonID = 9606, multiOrgExp = F),
 			                    contains="EuclideanClusterer"
                           )
 
@@ -38,7 +38,7 @@ setMethod("retrieveFeatures",signature(object="ProtExpAtlasBaseClusterer"), func
   keysProts<-object@proteins
   ktype<-"UNIPROTKB"
   columns<-c("ENSEMBL")
-  taxId(UniProt.ws)<-object@taxonId
+  taxId(UniProt.ws)<-object@taxonID
   res.dt <- data.table(select(UniProt.ws, keysProts, columns, ktype),key=c("ENSEMBL"))
   # Now we retrieve the data for the experiment, this depends on the type
   # of experiment: "baseline results" (where a matrix is downloaded
@@ -48,7 +48,7 @@ setMethod("retrieveFeatures",signature(object="ProtExpAtlasBaseClusterer"), func
   urlPrefix<-"https://www.ebi.ac.uk/gxa/experiments/"
   urlSuffix<-""
   if(object@multiOrgExp)
-    urlSuffix<-paste("?serializedFilterFactors=ORGANISM:",taxId2Label$label[taxId2Label$taxId==object@taxonId],sep="")
+    urlSuffix<-paste("?serializedFilterFactors=ORGANISM:",taxId2Label$label[taxId2Label$taxId==object@taxonID],sep="")
   # some data sets might require additional information, otherwise they are obtained
   # by default for human:
   # http://www.ebi.ac.uk/gxa/experiments/E-GEOD-30352.tsv?serializedFilterFactors=ORGANISM:Mus%20musculus
