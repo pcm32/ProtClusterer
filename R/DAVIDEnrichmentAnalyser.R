@@ -8,6 +8,14 @@ DAVIDEnrichmentAnalyser <- setClass("DAVIDEnrichmentAnalyser",
 					     )
 				    )
 
+#' \code{DAVIDEnrichmentAnalyser} is an S4 object that handles uses the DAVID 
+#' site for enrichment analysis.
+#' 
+#' @param email The registered email to use the DAVID remote API. This email has
+#'   to be registered with DAVID.
+#' @param annotCategories A vector of characters with the desired categories for
+#'   enrichment analysis. 
+setGeneric("DAVIDEnrichmentAnalyser",function(email,annotCatergories) standardGeneric("DAVIDEnrichmentAnalyser"))
 # categories are available here: http://david.abcc.ncifcrf.gov/content.jsp?file=DAVID_API.html#approved_list
 
 getGO_ALLCategories <- function() { c("GOTERM_BP_ALL","GOTERM_MF_ALL","GOTERM_CC_ALL") }

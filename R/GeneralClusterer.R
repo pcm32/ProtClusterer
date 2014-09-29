@@ -50,7 +50,7 @@ setGeneric("retrieveFeatures",function(object,...) standardGeneric("retrieveFeat
 #' the features. It should be called after \code{retrieveFeatures}
 #' 
 #' @param object An object which inherits from GeneralClusterer.
-#' @param minFeaturesPres The minimum number that a protein needs to show up in
+#' @param minFeaturePres The minimum number that a protein needs to show up in
 #'   a feature to be considered for the distance calculations.
 #' @return a new object of the same type as the one provided with a matrix of 
 #'   proteins/features filled and distances calculated.
@@ -69,6 +69,7 @@ setGeneric("calculateDistances",function(object,minFeaturePres=0,...) standardGe
 #' @param k The number of clusters (integer) to be enumerated.
 #' @param h The height to cut the dendrogram at to produce the clusters. 
 #'   \code{k} overrides this.
+#' @param groupLabels whether to produce group/cluster labels.
 #' @param ... other parameters for each clusterer.
 #' @return a new object of the same type as the one provided with a matrix of 
 #'   proteins/features filled, distances calculated and clusters colored.
@@ -83,6 +84,8 @@ setGeneric("colourProteinClusters",function(object,k,h,groupLabels=T,...) standa
 #' 
 #' @param object An object which inherits from GeneralClusterer with a matrix of
 #'   proteins/features filled, distances calculated and clusters colored.
+#' @param clusterNumbers The clusters (defined by their numbers) for which
+#'   proteins should be obtained.
 setGeneric("getProteinsInClusters",function(object,clusterNumbers,...) standardGeneric("getProteinsInClusters"))
 
 #' Redo with Clusters
@@ -90,7 +93,10 @@ setGeneric("getProteinsInClusters",function(object,clusterNumbers,...) standardG
 #' \code{redoWithClusters} runs the all the steps again for the proteins in the 
 #' defined clusters.
 #' 
+#' @param object An object which inherits from GeneralClusterer with a matrix of
+#'   proteins/features filled, distances calculated and clusters colored.
 #' @param clusterNumbers The clusters for which the analysis should be redone.
+#' @param ... additional parameters for each implementation.
 #'   
 #' @return a new object of the same type as the one provided with a matrix of 
 #'   proteins/features filled, distances calculated and clusters colored, but
@@ -110,6 +116,7 @@ setGeneric("redoWithClusters",function(object,clusterNumbers,...) standardGeneri
 #'   heatmap, defaults to \code{False}.
 #' @param displayFeat Sets whether the feature identifier should be shown in the
 #' heatmap, defaults to \code{False}.
+#' @param ... additional parameters for implementations.
 setGeneric("plotHeatMap",function(object,displayProt=F,displayFeat=F,...) standardGeneric("plotHeatMap"))
 setGeneric("autoColourProteinClusters",function(object,...) standardGeneric("autoColourProteinClusters"))
 

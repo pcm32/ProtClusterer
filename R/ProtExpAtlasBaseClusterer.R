@@ -13,6 +13,20 @@ ProtExpAtlasBaseClusterer <- setClass("ProtExpAtlasBaseClusterer",
 			                    contains="EuclideanClusterer"
                           )
 
+#' An S4 object that handles clustering of proteins based on the proteins 
+#' expression in the ArrayExpress baseline experiments.
+#' 
+#' @param proteins List of UniProt identifiers to produce analysis for.
+#' @param experimentID The experiment identifier in ArrayExpress Atlas Baseline 
+#'   repository
+#' @param taxonID The NCBI Taxonomy / UniProt Taxonomy identifier for the 
+#'   species. Defaults to human 9606.
+#' @param multiOrgExp A boolean denoting whether the ArrayExpress Atlast 
+#'   Baseline experiment is multi organism or not. Default to \code{FALSE}.
+#'   
+setGeneric("ProtExpAtlasBaseClusterer",function(proteins, experimentID, taxonID, multiOrgExp, ...) standardGeneric("ProtExpAtlasBaseClusterer"))
+
+
 asNumeric <- function(x) as.numeric(x)
 factorsNumeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.character)],   
                                                    asNumeric))
