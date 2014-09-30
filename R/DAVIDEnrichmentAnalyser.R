@@ -1,7 +1,8 @@
 #' @include GeneralClusterer.R
 NULL
 
-DAVIDEnrichmentAnalyser <- setClass("DAVIDEnrichmentAnalyser",
+
+setClass("DAVIDEnrichmentAnalyser",
 				    slots= c(
 					     email = "character",
 					     annotCategories = "vector"	
@@ -15,9 +16,15 @@ DAVIDEnrichmentAnalyser <- setClass("DAVIDEnrichmentAnalyser",
 #'   to be registered with DAVID.
 #' @param annotCategories A vector of characters with the desired categories for
 #'   enrichment analysis. 
-setGeneric("DAVIDEnrichmentAnalyser",function(email,annotCatergories) standardGeneric("DAVIDEnrichmentAnalyser"))
+#' @export
+DAVIDEnrichmentAnalyser<-function(email,annotCategories) {
+  new("DAVIDEnrichmentAnalyser",email = email, annotCategories = annotCategories)
+}
+
+
 # categories are available here: http://david.abcc.ncifcrf.gov/content.jsp?file=DAVID_API.html#approved_list
 
+#' @export
 getGO_ALLCategories <- function() { c("GOTERM_BP_ALL","GOTERM_MF_ALL","GOTERM_CC_ALL") }
 getPathwaysCategories <- function() { c("BBID","BIOCARTA","EC_NUMBER","KEGG_COMPOUND","KEGG_PATHWAY","KEGG_REACTION") }
 

@@ -1,14 +1,18 @@
-#' An S4 object that handles clustering of proteins based on the presence/absence of
-#' InterPro domains.
-#'
 #' @include PresenceAbsenceClusterer.R
-ProtDomClusterer <- setClass("ProtDomClusterer", 
+NULL
+
+#' An S4 object that handles clustering of proteins based on the 
+#' presence/absence of InterPro domains.
+#'
+#' @export ProtDomClusterer
+ProtDomClusterer<-setClass("ProtDomClusterer", 
                           slots= c(
                             davidEmail = "character"
                             ),
 			  contains="PresenceAbsenceClusterer"
                           )
 
+#' @export
 setMethod("retrieveFeatures",signature(object="ProtDomClusterer"), function(object) {
   interproBM<-useMart("prod-intermart_1",dataset="entry")
   # listFilters(interproBM)
@@ -22,6 +26,7 @@ setMethod("retrieveFeatures",signature(object="ProtDomClusterer"), function(obje
   return(object)
 })
 
+#' @export
 setMethod("calculateDistances",signature(object="ProtDomClusterer"), function(object,minFeaturePres=0) {
   toDrop <- names(which(colSums(object@uniqueFeaturesTable)<minFeaturePres))
   uniqTableFeatsAboveMin <- object@uniqueFeaturesTable[!(colnames(object@uniqueFeaturesTable) %in% toDrop)]

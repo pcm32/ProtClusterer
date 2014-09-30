@@ -24,6 +24,7 @@ ProtExpAtlasBaseClusterer <- setClass("ProtExpAtlasBaseClusterer",
 #' @param multiOrgExp A boolean denoting whether the ArrayExpress Atlast 
 #'   Baseline experiment is multi organism or not. Default to \code{FALSE}.
 #'   
+#' @export
 setGeneric("ProtExpAtlasBaseClusterer",function(proteins, experimentID, taxonID, multiOrgExp, ...) standardGeneric("ProtExpAtlasBaseClusterer"))
 
 

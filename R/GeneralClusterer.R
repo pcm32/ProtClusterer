@@ -8,6 +8,7 @@ setOldClass("integer")
 #' 
 #' @slot proteins A list of UniProt identifiers as a factor for the proteins to
 #'   be clustered.
+#' @export
 GeneralClusterer <- setClass("GeneralClusterer", 
                           slots= c(
                             proteins = "factor", 
