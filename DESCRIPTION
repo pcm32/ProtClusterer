@@ -7,7 +7,7 @@ Maintainer: Pablo Moreno <pcm32@github.com>
 Description: A package to clusterize proteins according to data/annotation
     extracted from the way, on an iterative manner.
 License: GPL-2
-Imports:
+Depends:
     dendroextras,
     gplots,
     RDAVIDWebService,
@@ -15,7 +15,8 @@ Imports:
     biomaRt,
     UniProt.ws,
     RCurl,
-    data.table
+    data.table,
+    methods
 Collate:
     'GeneralClusterer.R'
     'DAVIDEnrichmentAnalyser.R'
@@ -23,5 +24,3 @@ Collate:
     'PresenceAbsenceClusterer.R'
     'ProtDomClusterer.R'
     'ProtExpAtlasBaseClusterer.R'
-Depends:
-    methods
