@@ -24,13 +24,28 @@ DAVIDEnrichmentAnalyser<-function(email,annotCategories) {
 
 # categories are available here: http://david.abcc.ncifcrf.gov/content.jsp?file=DAVID_API.html#approved_list
 
+#' Produces all the Gene Ontology categories for use with DAVID.
 #' @export
 getGO_ALLCategories <- function() { c("GOTERM_BP_ALL","GOTERM_MF_ALL","GOTERM_CC_ALL") }
+#' Produces all the Pathway categories to use with DAVID.
+#' @export
 getPathwaysCategories <- function() { c("BBID","BIOCARTA","EC_NUMBER","KEGG_COMPOUND","KEGG_PATHWAY","KEGG_REACTION") }
-
+#' Produces all the disease categories to use with DAVID.
+#' @export
 getDiseaseCategories <- function() { c("GENETIC_ASSOCIATION_DB_DISEASE","OMIM_DISEASE") }
 
+#' \code{enrichmentAnalysisForClusters} runs the enrichment analysis for the 
+#' general clusterer object provided, the desired clusters and the previously 
+#' set categories.
+#' 
+#' @param object DAVIDEnrichmentAnalyser object initialized.
+#' @param generalClusterer A GeneralClusterer descendant object with clusters.
+#' @param clusterNumbers A vector of numbers defining the desired clusters to be
+#'   used in the enrichment analysis.
+#' @param prefix A prefix to be appended to the results files written.
+#' @export  
 setGeneric("enrichmentAnalysisForClusters",function(object,generalClusterer,clusterNumbers,prefix,...) standardGeneric("enrichmentAnalysisForClusters"))
+#' @export
 setMethod("enrichmentAnalysisForClusters",signature(object="DAVIDEnrichmentAnalyser",generalClusterer="GeneralClusterer",clusterNumbers="vector",prefix="character"),function(object,generalClusterer,clusterNumbers,prefix="") {
   david<-DAVIDWebService$new(email=object@email)
   #setAnnotationCategories(david, c("GOTERM_BP_ALL","GOTERM_MF_ALL","GOTERM_CC_ALL"))

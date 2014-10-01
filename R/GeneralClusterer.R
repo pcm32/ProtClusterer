@@ -41,6 +41,7 @@ GeneralClusterer <- setClass("GeneralClusterer",
 #'   
 #' @return a new object of the same type as the one provided with a matrix of 
 #'   proteins/features filled.
+#' @export
 setGeneric("retrieveFeatures",function(object,...) standardGeneric("retrieveFeatures"))
 
 #' Calculate distances
@@ -55,6 +56,7 @@ setGeneric("retrieveFeatures",function(object,...) standardGeneric("retrieveFeat
 #'   a feature to be considered for the distance calculations.
 #' @return a new object of the same type as the one provided with a matrix of 
 #'   proteins/features filled and distances calculated.
+#' @export
 setGeneric("calculateDistances",function(object,minFeaturePres=0,...) standardGeneric("calculateDistances"))
 
 #' Colour protein clusters
@@ -74,6 +76,7 @@ setGeneric("calculateDistances",function(object,minFeaturePres=0,...) standardGe
 #' @param ... other parameters for each clusterer.
 #' @return a new object of the same type as the one provided with a matrix of 
 #'   proteins/features filled, distances calculated and clusters colored.
+#' @export
 setGeneric("colourProteinClusters",function(object,k,h,groupLabels=T,...) standardGeneric("colourProteinClusters"))
 
 #' Get proteins in clusters
@@ -87,6 +90,7 @@ setGeneric("colourProteinClusters",function(object,k,h,groupLabels=T,...) standa
 #'   proteins/features filled, distances calculated and clusters colored.
 #' @param clusterNumbers The clusters (defined by their numbers) for which
 #'   proteins should be obtained.
+#' @export
 setGeneric("getProteinsInClusters",function(object,clusterNumbers,...) standardGeneric("getProteinsInClusters"))
 
 #' Redo with Clusters
@@ -103,6 +107,7 @@ setGeneric("getProteinsInClusters",function(object,clusterNumbers,...) standardG
 #'   proteins/features filled, distances calculated and clusters colored, but
 #'   based on the proteins available in the defined clusters of the object given
 #'   as parameter.
+#' @export
 setGeneric("redoWithClusters",function(object,clusterNumbers,...) standardGeneric("redoWithClusters"))
 
 #' Plot heatmap
@@ -118,13 +123,16 @@ setGeneric("redoWithClusters",function(object,clusterNumbers,...) standardGeneri
 #' @param displayFeat Sets whether the feature identifier should be shown in the
 #' heatmap, defaults to \code{False}.
 #' @param ... additional parameters for implementations.
+#' @export
 setGeneric("plotHeatMap",function(object,displayProt=F,displayFeat=F,...) standardGeneric("plotHeatMap"))
 setGeneric("autoColourProteinClusters",function(object,...) standardGeneric("autoColourProteinClusters"))
 
+#' @export
 setMethod("getProteinsInClusters",signature(object="GeneralClusterer",clusterNumbers="vector"),function(object,clusterNumbers) {
    object@proteinGroup[object@proteinGroup %in% clusterNumbers]
 })
 
+#' @export
 setMethod("colourProteinClusters",signature(object="GeneralClusterer"),function(object,k,h,groupLabels=TRUE) {
    colour_clusters(d=object@clustProts,k=k,h=h,groupLabels=groupLabels)->object@colorProtDend
    slice(object@clustProts,k=k,h=h)->object@proteinGroup
@@ -136,6 +144,7 @@ setMethod("colourProteinClusters",signature(object="GeneralClusterer"),function(
    return(object)
 })
 
+#' @export
 setMethod("redoWithClusters",signature(object="GeneralClusterer",clusterNumbers="vector"),function(object,clusterNumbers,type=class(object)[[1]]) {
   as.factor(names(getProteinsInClusters(object,clusterNumbers)))->proteins
   #toDrop <- names(which(colSums(object@uniqueFeaturesTable[row.names(object@uniqueFeaturesTable) %in% names(proteins)])>0))

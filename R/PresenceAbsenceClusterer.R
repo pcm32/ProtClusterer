@@ -4,6 +4,17 @@ PresenceAbsenceClusterer <- setClass("PresenceAbsenceClusterer",
                              contains="GeneralClusterer"
 )
 
+#' \code{plotHeatMap} plots the heatmap for the provided ProtClusterer object. 
+#' In the presence/absence implementation, a particular color mode is used.
+#' 
+#' @param object The ProtClusterer object, with distances calculated, and 
+#'   clusters generated.
+#' @param displayProt Boolean to display the protein identifier. Defaults
+#'   \code{FALSE}.
+#' @param displayFeat Boolean to display the feature (domain, expression tissue,
+#'   etc) identifier. Defaults to \code{FALSE}.
+#'   
+#' @export
 setMethod("plotHeatMap",signature(object="PresenceAbsenceClusterer"),
           function(object,displayProt=FALSE,displayFeat=FALSE) {
             protLab = if(displayProt) rownames(object@uniqueFeaturesTable) else c("");

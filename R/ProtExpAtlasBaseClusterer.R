@@ -25,7 +25,10 @@ ProtExpAtlasBaseClusterer <- setClass("ProtExpAtlasBaseClusterer",
 #'   Baseline experiment is multi organism or not. Default to \code{FALSE}.
 #'   
 #' @export
-setGeneric("ProtExpAtlasBaseClusterer",function(proteins, experimentID, taxonID, multiOrgExp, ...) standardGeneric("ProtExpAtlasBaseClusterer"))
+ProtExpAtlasBaseClusterer <- function(proteins, experimentID, taxonID=9606, multiOrgExp=FALSE, ...) {
+    new("ProtExpAtlasBaseClusterer",proteins=proteins,experimentID=experimentID,taxonID=taxonID,
+        multiOrgExp=multiOrgExp)  
+}
 
 
 asNumeric <- function(x) as.numeric(x)
@@ -64,13 +67,14 @@ setMethod("retrieveFeatures",signature(object="ProtExpAtlasBaseClusterer"), func
   expreForProts$UNIPROTKB[duplicated(expreForProts$UNIPROTKB)]<-paste(expreForProts$UNIPROTKB[duplicated(expreForProts$UNIPROTKB)],expreForProts$rn[duplicated(expreForProts$UNIPROTKB)],sep=".")
   as.data.frame(expreForProts)->expreForProts
   row.names(expreForProts)<-expreForProts$UNIPROTKB
-  expreForProts[,!names(expreForProts) %in% c("ENSEMBL","Gene.ID","rn","UNIPROTKB")]->expreForProts
+  expreForProts[,!names(expreForProts) %in% c("ENSEMBL","Gene.ID","rn","UNIPROTKB","GENES")]->expreForProts
   expreForProtsDF<-as.data.frame.matrix(expreForProts)
   expreForProtsDF[expreForProtsDF=='']<-0
   object@uniqueFeaturesTable<-factorsNumeric(expreForProtsDF)
   return(object)
 })
 
+#' @export
 setMethod("calculateDistances",signature(object="ProtExpAtlasBaseClusterer"), function(object,minFeaturePres=0) {
   #toDrop <- names(which(colSums(object@uniqueFeaturesTable)<minFeaturePres))
   #uniqTableFeatsAboveMin <- object@uniqueFeaturesTable[!(colnames(object@uniqueFeaturesTable) %in% toDrop)]
