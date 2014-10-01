@@ -1,15 +1,15 @@
+#' @include EuclideanClusterer.R
+NULL
 
 # the taxonomy needs to be set for Uniprot.ws (default to human)
 
-#' @include EuclideanClusterer.R
-ProtExpAtlasBaseClusterer <- setClass("ProtExpAtlasBaseClusterer", 
+setClass("ProtExpAtlasBaseClusterer", 
                           slots= c(
                             experimentID = "character",
                             typeOfExp = "character",
-                            taxonID = "numeric",
                             multiOrgExp = "logical"
                             ),
-                          prototype = prototype(taxonID = 9606, multiOrgExp = F),
+                          prototype = prototype(multiOrgExp = F),
 			                    contains="EuclideanClusterer"
                           )
 
@@ -37,13 +37,21 @@ factorsNumeric <- function(d) modifyList(d, lapply(d[, sapply(d, is.character)],
 
 taxId2Label<-data.frame(taxId=c(9606,10090),label=c("Homo sapiens","Mus musculus"))
 
+#' @export
 setMethod("retrieveFeatures",signature(object="ProtExpAtlasBaseClusterer"), function(object) {
   # We need first to translate proteins into genes for gene expression atlas
-  keysProts<-object@proteins
-  ktype<-"UNIPROTKB"
-  columns<-c("ENSEMBL")
-  taxId(UniProt.ws)<-object@taxonID
-  res.dt <- data.table(select(UniProt.ws, keysProts, columns, ktype),key=c("ENSEMBL"))
+  
+  if(nrow(object@annotation)==0) {
+    annotateProteins(object)->object
+    #keysProts<-object@proteins
+    #ktype<-"UNIPROTKB"
+    #columns<-c("ENSEMBL")
+    #if(object@taxonID!=9606) {
+    #  taxId(UniProt.ws)<-object@taxonID
+    #}
+    #res.dt <- data.table(select(UniProt.ws, keysProts, columns, ktype),key=c("ENSEMBL"))
+  }
+  res.dt = data.table(object@annotation,key=c("ENSEMBL"))
   # Now we retrieve the data for the experiment, this depends on the type
   # of experiment: "baseline results" (where a matrix is downloaded
   # from https://www.ebi.ac.uk/gxa/experiments/<experimentID>.tsv ),

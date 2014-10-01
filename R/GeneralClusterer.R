@@ -14,20 +14,52 @@ GeneralClusterer <- setClass("GeneralClusterer",
                             proteins = "factor", 
                             retrievalResult = "data.frame", # retrievalResult
                             uniqueFeaturesTable = "data.frame", # unique results, presence absence
+                            annotation = "data.frame",
                             clustProts = "hclust",
                             clustFeatures = "hclust", # cluster features
                             colorProtDend = "dendrogram",
                             proteinGroup = "numeric",
+                            taxonID = "numeric",
                             proteinDist = "dist",
                             featureDist = "dist"   # feature distances.
                           ),
                           prototype = list(clustProts=structure(list(),class="hclust"),
                                            clustFeatures=structure(list(),class="hclust"),
                                            colorProtDend=structure(list(),class="dendrogram"),
+                                           taxonID = 9606,
                                            proteinDist=structure(double(),class="dist"),
                                            featureDist=structure(double(),class="dist")
                           )
 )
+
+#' Generate clusters
+#' 
+#' \code{generateClusters} runs at once all the required method to produce data
+#' to be ready to be plotted in a heatmap.
+#' 
+#' @param object An object which inherits from GeneralClusterer.
+#' @param minFeaturePres The minimum number that a protein needs to show up in
+#'   a feature to be considered for the distance calculations.
+#' @param k The number of clusters (integer) to be enumerated.
+#' @param h The height to cut the dendrogram at to produce the clusters. 
+#'   \code{k} overrides this.
+#' @param groupLabels whether to produce group/cluster labels.
+#' 
+#' @return a new object of the same type as the one provided with a matrix of 
+#'   proteins/features filled, distances calculated and clusters colored.
+#'  
+#' @export
+setGeneric("generateClusters",function(object,minFeaturePres=0,k,h,groupLabels=T,...) standardGeneric("generateClusters"))
+
+#' Annotate proteins
+#' 
+#' \code{annotateProteins} retrieves annotation for the proteins through a web
+#' service
+#' 
+#' @param object An object which inherits from GeneralClusterer.
+#'   
+#' @return a new object of the same type as the one provided, with annotations
+setGeneric("annotateProteins",function(object) standardGeneric("annotateProteins"))
 
 #' Retrieve features
 #' 
@@ -155,6 +187,23 @@ setMethod("redoWithClusters",signature(object="GeneralClusterer",clusterNumbers=
   calculateDistances(npc)->npc
   colourProteinClusters(npc,k=length(clusterNumbers),groupLabels=clusterNumbers)->npc
   npc
+})
+
+#' @export
+setMethod("generateClusters",signature(object="GeneralClusterer"),function(object,minFeaturePres=0,k,h,groupLabels=T,...){
+  annotateProteins(object)->object
+  retrieveFeatures(object)->object
+  calculateDistances(object,minFeaturePres=minFeatures)->object
+  colourProteinClusters(object,groupLabels=groupLabels,k=k,h=h)->object
+})
+
+#' @export
+setMethod("annotateProteins",signature(object="GeneralClusterer"),function(object) {
+  if(object@taxonID!=9606) {
+    taxId(UniProt.ws)<-object@taxonID
+  }
+  data.table(select(UniProt.ws,keys=object@proteins,columns=c("GENES","ENSEMBL"),keytype="UNIPROTKB"),key="UNIPROTKB")->object@annotation
+  return(object)
 })
 
 
