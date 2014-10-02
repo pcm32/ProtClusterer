@@ -81,18 +81,3 @@ setMethod("retrieveFeatures",signature(object="ProtExpAtlasBaseClusterer"), func
   object@uniqueFeaturesTable<-factorsNumeric(expreForProtsDF)
   return(object)
 })
-
-#' @export
-setMethod("calculateDistances",signature(object="ProtExpAtlasBaseClusterer"), function(object,minFeaturePres=0) {
-  #toDrop <- names(which(colSums(object@uniqueFeaturesTable)<minFeaturePres))
-  #uniqTableFeatsAboveMin <- object@uniqueFeaturesTable[!(colnames(object@uniqueFeaturesTable) %in% toDrop)]
-  # here we should use jaccard or other binary distance for presence/absence, not euclidean.
-  # 1 if for jaccard
-  dist(x=as.matrix(object@uniqueFeaturesTable),method="euclidean")->object@proteinDist
-  dist(x=t(as.matrix(object@uniqueFeaturesTable)),method="euclidean")->object@featureDist
-  # According to this paper http://ieeexplore.ieee.org/xpls/abs_all.jsp?arnumber=6421371&tag=1 complete and ward are the best options for
-  # binary data
-  hclust(d=object@proteinDist,method="complete")->object@clustProts
-  hclust(d=object@featureDist,method="complete")->object@clustFeatures
-  return(object)
-})
