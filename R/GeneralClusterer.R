@@ -156,8 +156,10 @@ setGeneric("redoWithClusters",function(object,clusterNumbers,...) standardGeneri
 #' heatmap, defaults to \code{False}.
 #' @param ... additional parameters for implementations.
 #' @export
-setGeneric("plotHeatMap",function(object,displayProt=F,displayFeat=F,...) standardGeneric("plotHeatMap"))
+setGeneric("plotHeatMap",function(object,displayProt=F,displayFeat=F,useProtNames=TRUE,title="",...) standardGeneric("plotHeatMap"))
 setGeneric("autoColourProteinClusters",function(object,...) standardGeneric("autoColourProteinClusters"))
+
+setGeneric("getColourModel",function(object) standardGeneric("getColourModel"))
 
 #' @export
 setMethod("getProteinsInClusters",signature(object="GeneralClusterer",clusterNumbers="vector"),function(object,clusterNumbers) {
@@ -193,7 +195,7 @@ setMethod("redoWithClusters",signature(object="GeneralClusterer",clusterNumbers=
 setMethod("generateClusters",signature(object="GeneralClusterer"),function(object,minFeaturePres=0,k,h,groupLabels=T,...){
   annotateProteins(object)->object
   retrieveFeatures(object)->object
-  calculateDistances(object,minFeaturePres=minFeatures)->object
+  calculateDistances(object,minFeaturePres=minFeaturesPres)->object
   colourProteinClusters(object,groupLabels=groupLabels,k=k,h=h)->object
 })
 
@@ -205,5 +207,33 @@ setMethod("annotateProteins",signature(object="GeneralClusterer"),function(objec
   data.table(select(UniProt.ws,keys=object@proteins,columns=c("GENES","ENSEMBL"),keytype="UNIPROTKB"),key="UNIPROTKB")->object@annotation
   return(object)
 })
+ 
+#' @export
+setMethod("plotHeatMap",signature(object="GeneralClusterer"),
+          function(object,displayProt=FALSE,displayFeat=FALSE,useProtNames=TRUE,title="") {
+            protLab = c("")
+            if(displayProt) { 
+              if(useProtNames) {
+                # first retrieve only the first name (make a new data table)
+                object@annotation[,list(GENE=unlist(strsplit(GENES,split=' '))[1]),by=UNIPROTKB]->id2names
+                # This part should be used by both the Euclidean and Presence absence
+                protLab <- id2names[match(rownames(object@uniqueFeaturesTable),id2names$UNIPROTKB),GENE,with=T]
+              } else {
+                protLab = rownames(object@uniqueFeaturesTable)
+              }
+            }
+            
+            colourPanel<-getColourModel(object)
+            
+            featLab  = if(displayFeat)  colnames(object@uniqueFeaturesTable) else c("");
+            heatmap.2(as.matrix(object@uniqueFeaturesTable),
+                      Rowv=object@colorProtDend,
+                      Colv=as.dendrogram(object@clustFeatures),
+                      col=colourPanel,breaks=length(colourPanel)+1,
+                      trace="none",key=FALSE,labRow=protLab,labCol=featLab,main=title,
+                      margins=c(5,8),srtCol=45,cexCol=0.8,cexRow=0.8
+            )->hm
+            return(hm)
+          })
 
 
