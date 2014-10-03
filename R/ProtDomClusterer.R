@@ -1,16 +1,25 @@
 #' @include PresenceAbsenceClusterer.R
 NULL
 
-#' An S4 object that handles clustering of proteins based on the 
-#' presence/absence of InterPro domains.
-#'
-#' @export ProtDomClusterer
-ProtDomClusterer<-setClass("ProtDomClusterer", 
+setClass("ProtDomClusterer", 
                           slots= c(
                             davidEmail = "character"
                             ),
 			  contains="PresenceAbsenceClusterer"
                           )
+#' An S4 object that handles clustering of proteins based on the 
+#' presence/absence of InterPro domains.
+#' 
+#' @param proteins The list of UniProtKB identifiers to clusterize.
+#' @param taxonID The taxonomy identifier of the organism for which proteins
+#'   where given, defaults to human (9606)
+#'   
+#' @export ProtDomClusterer
+ProtDomClusterer <- function(proteins, taxonID=9606, ...) {
+  new("ProtDomClusterer",proteins=proteins,taxonID=taxonID)  
+}
+
+
 
 #' @export
 setMethod("retrieveFeatures",signature(object="ProtDomClusterer"), function(object) {
