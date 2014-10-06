@@ -183,19 +183,20 @@ setMethod("redoWithClusters",signature(object="GeneralClusterer",clusterNumbers=
   as.factor(names(getProteinsInClusters(object,clusterNumbers)))->proteins
   #toDrop <- names(which(colSums(object@uniqueFeaturesTable[row.names(object@uniqueFeaturesTable) %in% names(proteins)])>0))
   #iproDomsUniqTableForProts <- object@uniqueFeaturesTable[!(colnames(object@uniqueFeaturesTable) %in% toDrop)]
-  new(type,proteins=proteins)->npc
+  new(type,proteins=proteins,taxonID=object@taxonID)->npc
   # ProtClusterer(proteins=proteins)->npc
-  retrieveFeatures(npc)->npc
-  calculateDistances(npc)->npc
-  colourProteinClusters(npc,k=length(clusterNumbers),groupLabels=clusterNumbers)->npc
-  npc
+  generateClusters(npc,k=length(clusterNumbers),groupLabels=clusterNumbers)->npc
+  #retrieveFeatures(npc)->npc
+  #calculateDistances(npc)->npc
+  #colourProteinClusters(npc,k=length(clusterNumbers),groupLabels=clusterNumbers)->npc
+  #npc
 })
 
 #' @export
 setMethod("generateClusters",signature(object="GeneralClusterer"),function(object,minFeaturePres=0,k,h,groupLabels=T,...){
   annotateProteins(object)->object
   retrieveFeatures(object)->object
-  calculateDistances(object,minFeaturePres=minFeaturesPres)->object
+  calculateDistances(object,minFeaturePres=minFeaturePres)->object
   colourProteinClusters(object,groupLabels=groupLabels,k=k,h=h)->object
 })
 
