@@ -202,10 +202,22 @@ setMethod("generateClusters",signature(object="GeneralClusterer"),function(objec
 
 #' @export
 setMethod("annotateProteins",signature(object="GeneralClusterer"),function(object) {
-  if(object@taxonID!=9606) {
-    taxId(UniProt.ws)<-object@taxonID
-  }
-  data.table(select(UniProt.ws,keys=object@proteins,columns=c("GENES","ENSEMBL"),keytype="UNIPROTKB"),key="UNIPROTKB")->object@annotation
+  uniprotBM<-useMart("unimart",dataset="uniprot")
+  # listFilters(interproBM)
+  filters<-c("accession")
+  
+  # if we ask for the ENSEMBL ID here and is not available, we don't get any proteins, but we still want their names
+  attributes<-c("accession","gene_name")
+  getBM(attributes=attributes,filters=filters,values=object@proteins,mart=uniprotBM)->prot2names
+  data.table(UNIPROTKB=prot2names$accession,GENES=prot2names$gene_name,ENSEMBL=prot2names$ensembl_id,key="UNIPROTKB")->object@annotation
+  
+  attributes<-c("accession","ensembl_id"))
+  data.table(getBM(attributes=attributes,filters=filters,values=object@proteins,mart=uniprotBM),key="accession")->
+  
+#  if(object@taxonID!=9606) {
+#    taxId(UniProt.ws)<-object@taxonID
+#  }
+#  data.table(select(UniProt.ws,keys=object@proteins,columns=c("GENES","ENSEMBL"),keytype="UNIPROTKB"),key="UNIPROTKB")->object@annotation
   return(object)
 })
  
