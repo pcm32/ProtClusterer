@@ -8,12 +8,13 @@ Description: A package to clusterize proteins according to data/annotation
     extracted from the way, on an iterative manner.
 License: GPL-2
 Depends:
+    dendroextras,
+    data.table,
     gplots,
     ade4,
     biomaRt,
     UniProt.ws,
     RCurl,
-    data.table,
     methods
 Collate:
     'GeneralClusterer.R'
