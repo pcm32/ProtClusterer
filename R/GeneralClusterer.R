@@ -205,7 +205,11 @@ setMethod("annotateProteins",signature(object="GeneralClusterer"),function(objec
   if(object@taxonID!=9606) {
     taxId(UniProt.ws)<-object@taxonID
   }
-  data.table(select(UniProt.ws,keys=object@proteins,columns=c("GENES","ENSEMBL"),keytype="UNIPROTKB"),key="UNIPROTKB")->object@annotation
+  data.table(select(UniProt.ws,keys=object@proteins,columns=c("GENES"),keytype="UNIPROTKB"),key="UNIPROTKB")->prot2names
+  data.table(select(UniProt.ws,keys=object@proteins,columns=c("ENSEMBL"),keytype="UNIPROTKB"),key="UNIPROTKB")->prot2ENSEMBL
+  
+  merge(prot2names,prot2ENSEMBL,all=TRUE)->object@annotation
+  
   return(object)
 })
  

@@ -14,7 +14,6 @@ Depends:
     ade4,
     biomaRt,
     UniProt.ws,
-    RCurl,
     methods
 Collate:
     'GeneralClusterer.R'
