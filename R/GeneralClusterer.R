@@ -142,6 +142,19 @@ setGeneric("getProteinsInClusters",function(object,clusterNumbers,...) standardG
 #' @export
 setGeneric("redoWithClusters",function(object,clusterNumbers,...) standardGeneric("redoWithClusters"))
 
+#' Copy to new clusterer
+#' 
+#' Creates a new clusterer starting from the protein sets that belong to the given
+#' clusters of the provided object. The new clusterer will be of the same type
+#' as the original one. This method doesn't run distance calculation or colouring.
+#' 
+#' @param object An object which inherits from GeneralClusterer with a matrix of
+#'   proteins/features filled, distances calculated and clusters colored.
+#' @param clusterNumbers The clusters for which the analysis should be redone.
+#' 
+#' @export
+setGeneric("copyToNewClusterer",function(object,clusterNumbers,...) standardGeneric("copyToNewClusterer"))
+
 #' Plot heatmap
 #' 
 #' \code{plotHeatMap} produces a heatmap of the proteins and features of the
@@ -178,18 +191,25 @@ setMethod("colourProteinClusters",signature(object="GeneralClusterer"),function(
    return(object)
 })
 
-#' @export
-setMethod("redoWithClusters",signature(object="GeneralClusterer",clusterNumbers="vector"),function(object,clusterNumbers,type=class(object)[[1]]) {
+setMethod("copyToNewClusterer",signature(object="GeneralClusterer",clusterNumbers="vector"),function(object,clusterNumbers,type=class(object)[[1]],...) {
   as.factor(names(getProteinsInClusters(object,clusterNumbers)))->proteins
   #toDrop <- names(which(colSums(object@uniqueFeaturesTable[row.names(object@uniqueFeaturesTable) %in% names(proteins)])>0))
   #iproDomsUniqTableForProts <- object@uniqueFeaturesTable[!(colnames(object@uniqueFeaturesTable) %in% toDrop)]
   new(type,proteins=proteins,taxonID=object@taxonID)->npc
   # ProtClusterer(proteins=proteins)->npc
-  generateClusters(npc,k=length(clusterNumbers),groupLabels=clusterNumbers)->npc
-  #retrieveFeatures(npc)->npc
-  #calculateDistances(npc)->npc
-  #colourProteinClusters(npc,k=length(clusterNumbers),groupLabels=clusterNumbers)->npc
-  #npc
+  # generateClusters(npc,k=length(clusterNumbers),groupLabels=clusterNumbers)->npc
+  npc@uniqueFeaturesTable <- object@uniqueFeaturesTable[rownames(object@uniqueFeaturesTable) %in% proteins,]
+  npc@annotation <- object@annotation[UNIPROTKB %in% proteins,]
+  return(npc)
+})
+
+#' @export
+setMethod("redoWithClusters",signature(object="GeneralClusterer",clusterNumbers="vector"),function(object,clusterNumbers,type=class(object)[[1]]) {
+  copyToNewClusterer(object,clusterNumbers,type)->npc
+  # retrieveFeatures(npc)->npc
+  calculateDistances(npc)->npc
+  colourProteinClusters(npc,k=length(clusterNumbers),groupLabels=clusterNumbers)->npc
+  return(npc)
 })
 
 #' @export

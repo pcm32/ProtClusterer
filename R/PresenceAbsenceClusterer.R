@@ -9,6 +9,15 @@ setMethod("getColourModel",signature(object="PresenceAbsenceClusterer"),
             return(colorpanel(2,"white","red"))
           })
 
+setMethod("copyToNewClusterer",signature(object="PresenceAbsenceClusterer",clusterNumbers="vector"),function(object,clusterNumbers,type=class(object)[[1]],...) {
+  callNextMethod()->object
+  # now we get rid of features that don't show any presence in the subset of proteins used
+  featuresToDrop <- names(which(colSums(object@uniqueFeaturesTable)==0))
+  object@uniqueFeaturesTable <- 
+    object@uniqueFeaturesTable[!(colnames(object@uniqueFeaturesTable) %in% featuresToDrop)]
+  return(object)
+})
+
 #' @export
 setMethod("calculateDistances",signature(object="PresenceAbsenceClusterer"), function(object,minFeaturePres=0) {
   toDrop <- names(which(colSums(object@uniqueFeaturesTable)<minFeaturePres))
